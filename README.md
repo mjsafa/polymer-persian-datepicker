@@ -2,6 +2,22 @@
 
 a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt.datepicker
 
+## Installing
+```
+bower install --save polymer-persian-datepicker t
+```
+
+## Getting Started
+
+```
+<polymer-persian-datepicker
+            dir="rtl"
+            show-icon
+            value="{{myDateValue}}"
+            auto-close
+            label="تاریخ"></polymer-persian-datepicker>
+```
+
 ## Install the Polymer-CLI
 
 First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run `polymer serve` to serve your element locally.
