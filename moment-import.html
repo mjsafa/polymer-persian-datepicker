@@ -1,0 +1,18 @@
+<script>
+  if (!window.moment) {
+    // document object of the imported HTML file
+    var ownerDocument = (document._currentScript || document.currentScript).ownerDocument;
+    var script = ownerDocument.createElement('script');
+    script.async = true;
+
+    script.onload = function () {
+      var script2 = ownerDocument.createElement('script');
+      script2.async = true;
+      script2.src = '../moment-jalaali/build/moment-jalaali.js';
+      ownerDocument.head.appendChild(script2);
+    };
+
+    script.src = '../moment/moment.js';
+    ownerDocument.head.appendChild(script);
+  }
+</script>
