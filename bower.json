@@ -1,0 +1,19 @@
+{
+  "name": "polymer-persian-datepicker",
+  "description": "a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt.datepicker",
+  "main": "polymer-persian-datepicker.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.9.0",
+    "persian-datepicker": "^0.4.5",
+    "jquery": "^3.2.1",
+    "moment": "^2.18.1",
+    "moment-jalaali": "^0.7.0",
+    "paper-elements": "^1.0.7"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
+    "web-component-tester": "Polymer/web-component-tester#^6.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+  }
+}

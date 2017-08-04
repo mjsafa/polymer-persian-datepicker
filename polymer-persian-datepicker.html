@@ -1,0 +1,159 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="jquery-import.html">
+<link rel="import" href="moment-import.html">
+
+<!-- Import javascript -->
+<link rel="import" href="../paper-input/paper-input-container.html">
+<script src="../persian-date/dist/0.1.8/persian-date-0.1.8.js"></script>
+<script src="../persian-datepicker/dist/js/persian-datepicker-0.4.5.js"></script>
+
+
+<!-- Import CSS classes -->
+<link rel="stylesheet" href="../persian-datepicker/dist/css/persian-datepicker-0.4.5.css"/>
+<link rel="stylesheet" href="../persian-datepicker/dist/css/theme/persian-datepicker-cheerup.css"/>
+<!--
+<link rel="stylesheet" href="../persian-datepicker/dist/css/theme/persian-datepicker-blue.css"/>
+<link rel="stylesheet" href="../persian-datepicker/dist/css/theme/persian-datepicker-dark.css"/>
+<link rel="stylesheet" href="../persian-datepicker/dist/css/theme/persian-datepicker-redblack.css"/>
+-->
+
+<!--
+`polymer-persian-datepicker`
+a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt.datepicker
+
+@demo demo/index.html
+-->
+
+<dom-module id="polymer-persian-datepicker">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      .date-picker-input {
+        direction: ltr;
+        width: 100%;
+        text-align: right;
+        cursor: pointer !important;
+        background: none #fff;
+        /*border: 1px solid #c6c6c6;
+        border-radius: 3px;*/
+        /*
+                box-shadow: 0 1px 1px rgba(0, 0, 0, 0.07) inset;
+                box-sizing: border-box;
+        */
+        display: inline-block;
+        font-size: 1em;
+        /*margin-bottom: 0.5em;*/
+        padding: 0.5em;
+      }
+
+      .pointer * {
+        cursor: pointer !important;
+      }
+
+      .datepicker-plot-area {
+        right: 0px !important;
+      }
+
+      .label {
+        @apply(--paper-input-container-label);
+      }
+    </style>
+
+    [[value]]
+
+    <template is="dom-if" if="[[showIcon]]">
+      <iron-icon class="icon pointer" on-click="showDatePicker" icon="icons:perm-contact-calendar"></iron-icon>
+    </template>
+
+    <paper-input-container
+      auto-validate$="[[autoValidate]]" disabled$="[[disabled]]" invalid="[[invalid]]">
+      <div class="label">[[label]]</div>
+      <input label="[[label]]" type="text" class="date-picker date-picker-input" on-click="showDatePicker"
+             readonly="readonly">
+    </paper-input-container>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'polymer-persian-datepicker',
+
+      properties: {
+        value: {
+          type: String,
+          notify: true,
+//          value: '2017-12-29T00:13:00.000',
+          observer: '_valueChange'
+        },
+        timePickerEnabled: {
+          type: Boolean,
+          value: false
+        },
+        dateFormat: {
+          type: String,
+          value: 'YYYY-MM-DD'
+        },
+        showIcon: {
+          type: Boolean,
+          value: false
+        },
+        label: String
+      },
+
+
+      ready: function () {
+
+
+      },
+
+      initializeDatePicker: function () {
+        var me = this;
+        this.datePicker = jQuery(this).find('.date-picker').pDatepicker({
+          format: me.dateFormat,
+          autoClose: true,
+          persianDigit: true,
+          timePicker: {
+            enabled: me.timePickerEnabled
+          },
+          onSelect: function (date, datepicker) {
+            me.value = moment(datepicker.state.selected.unixDate).toISOString();
+          }
+        });
+      },
+
+      showDatePicker: function () {
+        if (!this.datePicker) {
+          this.initializeDatePicker();
+        }
+        jQuery(this).find('.date-picker').pDatepicker('show');
+      },
+
+      _valueChange: function () {
+        if (this.value && this.datePicker) {
+          var stringDate = moment(this.value).format();
+          stringDate = moment(stringDate).unix();
+          var selectedDate = persianDate().unix(stringDate);
+
+
+          jQuery(this).find('.date-picker').pDatepicker('setDate',
+            [
+              selectedDate.pDate.year,
+              selectedDate.pDate.month,
+              selectedDate.pDate.monthDayNumber + 1,
+              selectedDate.pDate.hours,
+              selectedDate.pDate.minutes
+            ]
+          )
+        } else {
+          jQuery(this).find('.date-picker').val(this.value);
+          this.initializeDatePicker();
+        }
+      }
+
+    });
+  </script>
+</dom-module>
