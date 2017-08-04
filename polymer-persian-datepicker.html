@@ -1,4 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-icons/editor-icons.html">
 <link rel="import" href="jquery-import.html">
 <link rel="import" href="moment-import.html">
 
@@ -11,6 +13,7 @@
 <!-- Import CSS classes -->
 <link rel="stylesheet" href="../persian-datepicker/dist/css/persian-datepicker-0.4.5.css"/>
 <link rel="stylesheet" href="../persian-datepicker/dist/css/theme/persian-datepicker-cheerup.css"/>
+
 <!--
 <link rel="stylesheet" href="../persian-datepicker/dist/css/theme/persian-datepicker-blue.css"/>
 <link rel="stylesheet" href="../persian-datepicker/dist/css/theme/persian-datepicker-dark.css"/>
@@ -22,6 +25,12 @@
 a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt.datepicker
 
 @demo demo/index.html
+
+
+++++++++ Available style variables
+--date-picker-icon-color: color of datepicker icon if showIcon property is true, default: #d5dae2
+
+
 -->
 
 <style>
@@ -75,7 +84,7 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
 
       input.date-picker-input {
         direction: ltr;
-        width: 90%;
+        width: calc(100% );
         text-align: right;
         cursor: pointer !important;
         background: none #fff;
@@ -103,6 +112,21 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
         @apply(--paper-input-container-label);
       }
 
+      .date-icon {
+        margin-left: -10px;
+        color: var(--date-picker-icon-color, #d5dae2);
+        width: 30px;
+        height: 30px;
+        position: absolute;
+        bottom: 0;
+        left: 7px;
+        cursor: pointer;
+      }
+
+      :host-context([dir="ltr"]) .date-icon{
+        right: 0;
+        left: initial;
+      }
 
     </style>
 
@@ -116,7 +140,8 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
         <input label="[[label]]" type="text" class="date-picker date-picker-input" on-click="showDatePicker"
                readonly="readonly">
         <template is="dom-if" if="[[showIcon]]">
-          <iron-icon class="icon pointer" on-click="showDatePicker" icon="icons:perm-contact-calendar"></iron-icon>
+          <iron-icon class="date-icon icon pointer" on-click="showDatePicker"
+                     icon="editor:insert-invitation"></iron-icon>
         </template>
       </div>
     </paper-input-container>
