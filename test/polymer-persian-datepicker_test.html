@@ -19,10 +19,14 @@
     </test-fixture>
 
     <script>
-      suite('polymer-persian-datepicker', function() {
+      suite('polymer-persian-datepicker', function(done) {
         test('instantiating the element works', function() {
           var element = fixture('basic');
-          assert.equal(element.is, 'polymer-persian-datepicker');
+          setTimeout(function () {
+            expect(element.value).to.be.empty;
+            done();
+          }, 200)
+
         });
       });
     </script>

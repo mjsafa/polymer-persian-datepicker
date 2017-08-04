@@ -24,6 +24,48 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
 @demo demo/index.html
 -->
 
+<style>
+  .datepicker-plot-area .datepicker-day-view .table-days td {
+    height: 26px;
+
+  }
+
+  .datepicker-plot-area {
+    width: 270px;
+    height: 305px;
+  }
+
+  .datepicker-plot-area .datepicker-day-view, .datepicker-plot-area .datepicker-month-view, .datepicker-plot-area .datepicker-year-view {
+    min-height: 205px !important;
+    margin: 30px 1% 0px 1%;
+  }
+
+  .datepicker-plot-area .datepicker-day-view .month-grid-box .header .header-row {
+    margin-bottom: 10px;
+  }
+
+  .datepicker-plot-area .datepicker-day-view .month-grid-box .header .header-row-cell {
+    color: #d6d6d6;
+  }
+
+  .datepicker-plot-area .datepicker-header {
+    /*background-color: #000000;*/
+  }
+
+  .datepicker-plot-area .datepicker-header .btn-next,
+  .datepicker-plot-area .datepicker-header .btn-switch,
+  .datepicker-plot-area .datepicker-header .btn-prev,
+  .datepicker-plot-area .datepicker-header .btn-next:hover,
+  .datepicker-plot-area .datepicker-header .btn-switch:hover,
+  .datepicker-plot-area .datepicker-header .btn-prev:hover {
+    background-color: #6d7c8d;
+    color: #d5dae2;
+    margin: 10px 1px;
+    padding: 10px 0;
+    /*border: 1px dotted #cbcbcb;*/
+  }
+</style>
+
 <dom-module id="polymer-persian-datepicker">
   <template>
     <style>
@@ -31,9 +73,9 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
         display: block;
       }
 
-      .date-picker-input {
+      input.date-picker-input {
         direction: ltr;
-        width: 100%;
+        width: 90%;
         text-align: right;
         cursor: pointer !important;
         background: none #fff;
@@ -60,19 +102,23 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
       .label {
         @apply(--paper-input-container-label);
       }
+
+
     </style>
 
     [[value]]
 
-    <template is="dom-if" if="[[showIcon]]">
-      <iron-icon class="icon pointer" on-click="showDatePicker" icon="icons:perm-contact-calendar"></iron-icon>
-    </template>
 
     <paper-input-container
       auto-validate$="[[autoValidate]]" disabled$="[[disabled]]" invalid="[[invalid]]">
       <div class="label">[[label]]</div>
-      <input label="[[label]]" type="text" class="date-picker date-picker-input" on-click="showDatePicker"
-             readonly="readonly">
+      <div class="horizontal layout">
+        <input label="[[label]]" type="text" class="date-picker date-picker-input" on-click="showDatePicker"
+               readonly="readonly">
+        <template is="dom-if" if="[[showIcon]]">
+          <iron-icon class="icon pointer" on-click="showDatePicker" icon="icons:perm-contact-calendar"></iron-icon>
+        </template>
+      </div>
     </paper-input-container>
 
   </template>
@@ -101,6 +147,12 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
           type: Boolean,
           value: false
         },
+
+        autoClose: {
+          type: Boolean,
+          value: false
+        },
+
         label: String
       },
 
@@ -114,13 +166,18 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
         var me = this;
         this.datePicker = jQuery(this).find('.date-picker').pDatepicker({
           format: me.dateFormat,
-          autoClose: true,
+          autoClose: me.autoClose,
           persianDigit: true,
           timePicker: {
             enabled: me.timePickerEnabled
           },
           onSelect: function (date, datepicker) {
             me.value = moment(datepicker.state.selected.unixDate).toISOString();
+          },
+          onHide: function () {
+            if (!me.value) {
+              jQuery(me).find('.date-picker').val('');
+            }
           }
         });
       },
@@ -148,9 +205,13 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
               selectedDate.pDate.minutes
             ]
           )
-        } else {
+        } else if (this.value) {
           jQuery(this).find('.date-picker').val(this.value);
           this.initializeDatePicker();
+        } else if (this.datePicker) {
+          jQuery(this).find('.date-picker').val(null);
+          jQuery(this).find('.date-picker').pDatepicker('destroy');
+          this.datePicker = null;
         }
       }
 
