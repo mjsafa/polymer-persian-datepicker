@@ -174,7 +174,7 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
           value: false
         },
 
-        autoClose: {
+        disableAutoClose: {
           type: Boolean,
           value: false
         },
@@ -192,7 +192,7 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
         var me = this;
         this.datePicker = jQuery(this).find('.date-picker').pDatepicker({
           format: me.dateFormat,
-          autoClose: me.autoClose,
+          autoClose: !me.disableAutoClose,
           persianDigit: true,
           timePicker: {
             enabled: me.timePickerEnabled
