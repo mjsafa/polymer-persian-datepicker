@@ -3,25 +3,26 @@
  Author: reza babakhani
  http://babakhani.github.io/PersianWebToolkit/datepicker
  */
-( function () {(function ($) {
-  $.fn.persianDatepicker = $.fn.pDatepicker = function (options) {
-    var args = Array.prototype.slice.call(arguments), output = this;
-    if (!this) {
-      $.error("Invalid selector");
-    }
-    $(this).each(function () {
-      // encapsulation Args
-      var emptyArr = new Array, tempArg = args.concat(emptyArr), dp = $(this).data("datepicker");
-      if (dp && typeof tempArg[0] == "string") {
-        var funcName = tempArg[0], funcArgs = tempArg.splice(0, 1);
-        output = dp[funcName](tempArg[0]);
-      } else {
-        this.pDatePicker = new Datepicker(this, options);
+( function () {
+  (function ($) {
+    $.fn.persianDatepicker = $.fn.pDatepicker = function (options) {
+      var args = Array.prototype.slice.call(arguments), output = this;
+      if (!this) {
+        $.error("Invalid selector");
       }
-    });
-    return output;
-  };
-})(jQuery);
+      $(this).each(function () {
+        // encapsulation Args
+        var emptyArr = new Array, tempArg = args.concat(emptyArr), dp = $(this).data("datepicker");
+        if (dp && typeof tempArg[0] == "string") {
+          var funcName = tempArg[0], funcArgs = tempArg.splice(0, 1);
+          output = dp[funcName](tempArg[0]);
+        } else {
+          this.pDatePicker = new Datepicker(this, options);
+        }
+      });
+      return output;
+    };
+  })(jQuery);
   var ClassConfig = {
 
 
@@ -186,7 +187,9 @@
      */
     destroy: function () {
       this.inputElem.removeClass(self.cssClass);
-      this.elmenet.main.remove();
+      if (this.elmenet) {
+        this.elmenet.main.remove();
+      }
     },
 
 
@@ -878,7 +881,7 @@
       } else {
         var e;
         for (e in currentObject) {
-          if(!isNaN(e)){
+          if (!isNaN(e)) {
             currentObject[e].apply(this, args);
           }
         }
@@ -991,8 +994,10 @@
    */
   Object.keys = Object.keys || (function () {
       var hasOwnProperty = Object.prototype.hasOwnProperty, hasDontEnumBug = !{
-        toString: null
-      }.propertyIsEnumerable("toString"), DontEnums = ['toString', 'toLocaleString', 'valueOf', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable', 'constructor'], DontEnumsLength = DontEnums.length;
+          toString: null
+        }.propertyIsEnumerable("toString"),
+        DontEnums = ['toString', 'toLocaleString', 'valueOf', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable', 'constructor'],
+        DontEnumsLength = DontEnums.length;
 
       return function (o) {
         if (typeof o !== "object" && typeof o !== "function" || o === null)
@@ -1250,8 +1255,8 @@
       [];
 
     return {
-      browser: match[ 1 ] || "",
-      version: match[ 2 ] || "0"
+      browser: match[1] || "",
+      version: match[2] || "0"
     };
   };
 
@@ -1262,7 +1267,7 @@
     var browser = {};
 
     if (matched.browser) {
-      browser[ matched.browser ] = true;
+      browser[matched.browser] = true;
       browser.version = matched.version;
     }
 
@@ -1563,7 +1568,7 @@
             var span = $("<span/>")
               .text(self._formatDigit(day))
               .attr("unixDate", dayPartUnixTime)
-              .data({ day: day, month: month, year: year, unixDate: dayPartUnixTime})
+              .data({day: day, month: month, year: year, unixDate: dayPartUnixTime})
               .addClass(cssClass)
               .appendTo($(this))[0];
             self.daysList.push(span);
@@ -2228,7 +2233,7 @@
      * @desc set time of timepicker
      */
     setTime: function () {
-      if(this.timePicker && this.timePicker.setTime){
+      if (this.timePicker && this.timePicker.setTime) {
         this.timePicker.setTime(this.state.selected.unixDate);
       }
     },
@@ -2606,7 +2611,7 @@
         datepicker: self.datepicker
       });
       this.mGrid.attachEvent("selectDay", function (x) {
-        self.datepicker.selectDate( x);
+        self.datepicker.selectDate(x);
         self.onSelect(x);
         self.mGrid.selectDate(self.datepicker.state.selected.unixDate);
       });
@@ -2983,7 +2988,7 @@
         } else {
           return false;
         }
-      }else {
+      } else {
         return this.datepicker.checkYear(y);
       }
     },
@@ -3498,7 +3503,7 @@
      *
      * @param unix
      */
-    setTime:function(unix){
+    setTime: function (unix) {
       var pd = new persianDate(unix);
       this._updateState('hour', pd.hour());
       this._updateState('minute', pd.minute());
@@ -3705,7 +3710,7 @@
     },
 
 
-    setSelectedDateTime:function (key, value) {
+    setSelectedDateTime: function (key, value) {
       var self = this;
       switch (key) {
         case 'unix':
@@ -3817,7 +3822,7 @@
    */
 
   (function (factory) {
-    if ( typeof define === 'function' && define.amd ) {
+    if (typeof define === 'function' && define.amd) {
       // AMD. Register as an anonymous module.
       define(['jquery'], factory);
     } else if (typeof exports === 'object') {
@@ -3829,25 +3834,25 @@
     }
   }(function ($) {
 
-    var toFix  = ['wheel', 'mousewheel', 'DOMMouseScroll', 'MozMousePixelScroll'],
+    var toFix = ['wheel', 'mousewheel', 'DOMMouseScroll', 'MozMousePixelScroll'],
       toBind = ( 'onwheel' in document || document.documentMode >= 9 ) ?
         ['wheel'] : ['mousewheel', 'DomMouseScroll', 'MozMousePixelScroll'],
-      slice  = Array.prototype.slice,
+      slice = Array.prototype.slice,
       nullLowestDeltaTimeout, lowestDelta;
 
-    if ( $.event.fixHooks ) {
-      for ( var i = toFix.length; i; ) {
-        $.event.fixHooks[ toFix[--i] ] = $.event.mouseHooks;
+    if ($.event.fixHooks) {
+      for (var i = toFix.length; i;) {
+        $.event.fixHooks[toFix[--i]] = $.event.mouseHooks;
       }
     }
 
     var special = $.event.special.mousewheel = {
       version: '3.1.12',
 
-      setup: function() {
-        if ( this.addEventListener ) {
-          for ( var i = toBind.length; i; ) {
-            this.addEventListener( toBind[--i], handler, false );
+      setup: function () {
+        if (this.addEventListener) {
+          for (var i = toBind.length; i;) {
+            this.addEventListener(toBind[--i], handler, false);
           }
         } else {
           this.onmousewheel = handler;
@@ -3857,10 +3862,10 @@
         $.data(this, 'mousewheel-page-height', special.getPageHeight(this));
       },
 
-      teardown: function() {
-        if ( this.removeEventListener ) {
-          for ( var i = toBind.length; i; ) {
-            this.removeEventListener( toBind[--i], handler, false );
+      teardown: function () {
+        if (this.removeEventListener) {
+          for (var i = toBind.length; i;) {
+            this.removeEventListener(toBind[--i], handler, false);
           }
         } else {
           this.onmousewheel = null;
@@ -3870,7 +3875,7 @@
         $.removeData(this, 'mousewheel-page-height');
       },
 
-      getLineHeight: function(elem) {
+      getLineHeight: function (elem) {
         var $elem = $(elem),
           $parent = $elem['offsetParent' in $.fn ? 'offsetParent' : 'parent']();
         if (!$parent.length) {
@@ -3879,7 +3884,7 @@
         return parseInt($parent.css('fontSize'), 10) || parseInt($elem.css('fontSize'), 10) || 16;
       },
 
-      getPageHeight: function(elem) {
+      getPageHeight: function (elem) {
         return $(elem).height();
       },
 
@@ -3890,36 +3895,44 @@
     };
 
     $.fn.extend({
-      mousewheel: function(fn) {
+      mousewheel: function (fn) {
         return fn ? this.bind('mousewheel', fn) : this.trigger('mousewheel');
       },
 
-      unmousewheel: function(fn) {
+      unmousewheel: function (fn) {
         return this.unbind('mousewheel', fn);
       }
     });
 
 
     function handler(event) {
-      var orgEvent   = event || window.event,
-        args       = slice.call(arguments, 1),
-        delta      = 0,
-        deltaX     = 0,
-        deltaY     = 0,
-        absDelta   = 0,
-        offsetX    = 0,
-        offsetY    = 0;
+      var orgEvent = event || window.event,
+        args = slice.call(arguments, 1),
+        delta = 0,
+        deltaX = 0,
+        deltaY = 0,
+        absDelta = 0,
+        offsetX = 0,
+        offsetY = 0;
       event = $.event.fix(orgEvent);
       event.type = 'mousewheel';
 
       // Old school scrollwheel delta
-      if ( 'detail'      in orgEvent ) { deltaY = orgEvent.detail * -1;      }
-      if ( 'wheelDelta'  in orgEvent ) { deltaY = orgEvent.wheelDelta;       }
-      if ( 'wheelDeltaY' in orgEvent ) { deltaY = orgEvent.wheelDeltaY;      }
-      if ( 'wheelDeltaX' in orgEvent ) { deltaX = orgEvent.wheelDeltaX * -1; }
+      if ('detail' in orgEvent) {
+        deltaY = orgEvent.detail * -1;
+      }
+      if ('wheelDelta' in orgEvent) {
+        deltaY = orgEvent.wheelDelta;
+      }
+      if ('wheelDeltaY' in orgEvent) {
+        deltaY = orgEvent.wheelDeltaY;
+      }
+      if ('wheelDeltaX' in orgEvent) {
+        deltaX = orgEvent.wheelDeltaX * -1;
+      }
 
       // Firefox < 17 horizontal scrolling related to DOMMouseScroll event
-      if ( 'axis' in orgEvent && orgEvent.axis === orgEvent.HORIZONTAL_AXIS ) {
+      if ('axis' in orgEvent && orgEvent.axis === orgEvent.HORIZONTAL_AXIS) {
         deltaX = deltaY * -1;
         deltaY = 0;
       }
@@ -3928,62 +3941,66 @@
       delta = deltaY === 0 ? deltaX : deltaY;
 
       // New school wheel delta (wheel event)
-      if ( 'deltaY' in orgEvent ) {
+      if ('deltaY' in orgEvent) {
         deltaY = orgEvent.deltaY * -1;
-        delta  = deltaY;
+        delta = deltaY;
       }
-      if ( 'deltaX' in orgEvent ) {
+      if ('deltaX' in orgEvent) {
         deltaX = orgEvent.deltaX;
-        if ( deltaY === 0 ) { delta  = deltaX * -1; }
+        if (deltaY === 0) {
+          delta = deltaX * -1;
+        }
       }
 
       // No change actually happened, no reason to go any further
-      if ( deltaY === 0 && deltaX === 0 ) { return; }
+      if (deltaY === 0 && deltaX === 0) {
+        return;
+      }
 
       // Need to convert lines and pages to pixels if we aren't already in pixels
       // There are three delta modes:
       //   * deltaMode 0 is by pixels, nothing to do
       //   * deltaMode 1 is by lines
       //   * deltaMode 2 is by pages
-      if ( orgEvent.deltaMode === 1 ) {
+      if (orgEvent.deltaMode === 1) {
         var lineHeight = $.data(this, 'mousewheel-line-height');
-        delta  *= lineHeight;
+        delta *= lineHeight;
         deltaY *= lineHeight;
         deltaX *= lineHeight;
-      } else if ( orgEvent.deltaMode === 2 ) {
+      } else if (orgEvent.deltaMode === 2) {
         var pageHeight = $.data(this, 'mousewheel-page-height');
-        delta  *= pageHeight;
+        delta *= pageHeight;
         deltaY *= pageHeight;
         deltaX *= pageHeight;
       }
 
       // Store lowest absolute delta to normalize the delta values
-      absDelta = Math.max( Math.abs(deltaY), Math.abs(deltaX) );
+      absDelta = Math.max(Math.abs(deltaY), Math.abs(deltaX));
 
-      if ( !lowestDelta || absDelta < lowestDelta ) {
+      if (!lowestDelta || absDelta < lowestDelta) {
         lowestDelta = absDelta;
 
         // Adjust older deltas if necessary
-        if ( shouldAdjustOldDeltas(orgEvent, absDelta) ) {
+        if (shouldAdjustOldDeltas(orgEvent, absDelta)) {
           lowestDelta /= 40;
         }
       }
 
       // Adjust older deltas if necessary
-      if ( shouldAdjustOldDeltas(orgEvent, absDelta) ) {
+      if (shouldAdjustOldDeltas(orgEvent, absDelta)) {
         // Divide all the things by 40!
-        delta  /= 40;
+        delta /= 40;
         deltaX /= 40;
         deltaY /= 40;
       }
 
       // Get a whole, normalized value for the deltas
-      delta  = Math[ delta  >= 1 ? 'floor' : 'ceil' ](delta  / lowestDelta);
-      deltaX = Math[ deltaX >= 1 ? 'floor' : 'ceil' ](deltaX / lowestDelta);
-      deltaY = Math[ deltaY >= 1 ? 'floor' : 'ceil' ](deltaY / lowestDelta);
+      delta = Math[delta >= 1 ? 'floor' : 'ceil'](delta / lowestDelta);
+      deltaX = Math[deltaX >= 1 ? 'floor' : 'ceil'](deltaX / lowestDelta);
+      deltaY = Math[deltaY >= 1 ? 'floor' : 'ceil'](deltaY / lowestDelta);
 
       // Normalise offsetX and offsetY properties
-      if ( special.settings.normalizeOffset && this.getBoundingClientRect ) {
+      if (special.settings.normalizeOffset && this.getBoundingClientRect) {
         var boundingRect = this.getBoundingClientRect();
         offsetX = event.clientX - boundingRect.left;
         offsetY = event.clientY - boundingRect.top;
@@ -4007,7 +4024,9 @@
       // handle multiple device types that give different
       // a different lowestDelta
       // Ex: trackpad = 3 and mouse wheel = 120
-      if (nullLowestDeltaTimeout) { clearTimeout(nullLowestDeltaTimeout); }
+      if (nullLowestDeltaTimeout) {
+        clearTimeout(nullLowestDeltaTimeout);
+      }
       nullLowestDeltaTimeout = setTimeout(nullLowestDelta, 200);
 
       return ($.event.dispatch || $.event.handle).apply(this, args);
@@ -4028,4 +4047,5 @@
       return special.settings.adjustOldDeltas && orgEvent.type === 'mousewheel' && absDelta % 120 === 0;
     }
 
-  }));}());
+  }));
+}());
