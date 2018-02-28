@@ -34,7 +34,7 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
 -->
 
 <style>
-  .datepicker-plot-area{
+  .datepicker-plot-area {
     z-index: 100000;
   }
 
@@ -60,7 +60,7 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
     color: #d6d6d6;
   }
 
-  .datepicker-header{
+  .datepicker-header {
     direction: ltr;
   }
 
@@ -87,7 +87,7 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
 
       input.date-picker-input {
         direction: ltr;
-        width: calc(100% );
+        width: calc(100%);
         text-align: right;
         cursor: pointer !important;
         background: none #fff;
@@ -126,7 +126,7 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
         cursor: pointer;
       }
 
-      :host-context([dir="ltr"]) .date-icon{
+      :host-context([dir="ltr"]) .date-icon {
         right: 0;
         left: initial;
       }
@@ -236,7 +236,10 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
           this.initializeDatePicker();
         } else if (this.datePicker) {
           jQuery(this).find('.date-picker').val(null);
-          jQuery(this).find('.date-picker').pDatepicker('destroy');
+
+          try {
+            jQuery(this).find('.date-picker').pDatepicker('destroy');
+          } catch (e) {}
           this.datePicker = null;
         }
       }
