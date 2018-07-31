@@ -6,12 +6,11 @@
 
 <!-- Import javascript -->
 <link rel="import" href="../paper-input/paper-input-container.html">
-<script src="../persian-date/dist/0.1.8/persian-date-0.1.8.js"></script>
-<script src="persian-datepicker-0.4.5.js"></script>
-
+<script src="../persian-date/dist/persian-date.js"></script>
+<script src="../persian-datepicker/dist/js/persian-datepicker.js"></script>
 
 <!-- Import CSS classes -->
-<link rel="stylesheet" href="../persian-datepicker/dist/css/persian-datepicker-0.4.5.css"/>
+<link rel="stylesheet" href="../persian-datepicker/dist/css/persian-datepicker.css"/>
 <link rel="stylesheet" href="../persian-datepicker/dist/css/theme/persian-datepicker-cheerup.css"/>
 
 <!--
@@ -33,51 +32,6 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
 
 -->
 
-<style>
-  .datepicker-plot-area {
-    z-index: 100000;
-  }
-
-  .datepicker-plot-area .datepicker-day-view .table-days td {
-    height: 26px;
-  }
-
-  .datepicker-plot-area {
-    width: 270px;
-    height: 305px;
-  }
-
-  .datepicker-plot-area .datepicker-day-view, .datepicker-plot-area .datepicker-month-view, .datepicker-plot-area .datepicker-year-view {
-    min-height: 205px !important;
-    margin: 30px 1% 0px 1%;
-  }
-
-  .datepicker-plot-area .datepicker-day-view .month-grid-box .header .header-row {
-    margin-bottom: 10px;
-  }
-
-  .datepicker-plot-area .datepicker-day-view .month-grid-box .header .header-row-cell {
-    color: #d6d6d6;
-  }
-
-  .datepicker-header {
-    direction: ltr;
-  }
-
-  .datepicker-plot-area .datepicker-header .btn-next,
-  .datepicker-plot-area .datepicker-header .btn-switch,
-  .datepicker-plot-area .datepicker-header .btn-prev,
-  .datepicker-plot-area .datepicker-header .btn-next:hover,
-  .datepicker-plot-area .datepicker-header .btn-switch:hover,
-  .datepicker-plot-area .datepicker-header .btn-prev:hover {
-    background-color: #6d7c8d;
-    color: #d5dae2;
-    margin: 10px 1px;
-    padding: 10px 0;
-    /*border: 1px dotted #cbcbcb;*/
-  }
-</style>
-
 <dom-module id="persian-datepicker">
   <template>
     <style>
@@ -91,24 +45,13 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
         text-align: right;
         cursor: pointer !important;
         background: none #fff;
-        /*border: 1px solid #c6c6c6;
-        border-radius: 3px;*/
-        /*
-                box-shadow: 0 1px 1px rgba(0, 0, 0, 0.07) inset;
-                box-sizing: border-box;
-        */
         display: inline-block;
         font-size: 1em;
-        /*margin-bottom: 0.5em;*/
         padding: 0.5em;
       }
 
       .pointer * {
         cursor: pointer !important;
-      }
-
-      .datepicker-plot-area {
-        right: 0px !important;
       }
 
       .label {
@@ -132,7 +75,6 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
       }
 
     </style>
-
 
     <paper-input-container
       auto-validate$="[[autoValidate]]" disabled$="[[disabled]]" invalid="[[invalid]]">
@@ -158,7 +100,6 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
         value: {
           type: String,
           notify: true,
-//          value: '2017-12-29T00:13:00.000',
           observer: '_valueChange'
         },
         timePickerEnabled: {
@@ -179,17 +120,32 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
           value: false
         },
 
-        label: String
-      },
+        label: String,
 
+        minDateEnable: {
+          type: Boolean,
+          value: false,
+          notify: true
+        },
+        maxDateEnable: {
+          type: Boolean,
+          value: false,
+          notify: true
+        }
+      },
 
       ready: function () {
-
-
-      },
-
-      initializeDatePicker: function () {
+        var minDateValue = 0;
+        var maxDateValue = 0;
         var me = this;
+
+        if (this.minDateEnable) {
+          minDateValue = new persianDate(new Date());
+        }
+        if (this.maxDateEnable) {
+          maxDateValue = new persianDate(new Date());
+        }
+
         this.datePicker = jQuery(this).find('.date-picker').pDatepicker({
           format: me.dateFormat,
           autoClose: !me.disableAutoClose,
@@ -197,21 +153,42 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
           timePicker: {
             enabled: me.timePickerEnabled
           },
-          onSelect: function (date, datepicker) {
-            me.value = moment(datepicker.state.selected.unixDate).toISOString();
+          onSelect: function (unix) {
+            this.set('value', moment(unix).toISOString());
+          }.bind(this),
+          minDate: minDateValue,
+          maxDate: maxDateValue
+        });
+      },
+
+      initializeDatePicker: function () {
+        var minDateValue = 0;
+        var maxDateValue = 0;
+        var me = this;
+
+        if (this.minDateEnable) {
+          minDateValue = new persianDate(new Date());
+        }
+        if (this.maxDateEnable) {
+          maxDateValue = new persianDate(new Date());
+        }
+
+        this.datePicker = jQuery(this).find('.date-picker').pDatepicker({
+          format: me.dateFormat,
+          autoClose: !me.disableAutoClose,
+          persianDigit: true,
+          timePicker: {
+            enabled: me.timePickerEnabled
           },
-          onHide: function () {
-            if (!me.value) {
-              jQuery(me).find('.date-picker').val('');
-            }
-          }
+          onSelect: function (unix) {
+            this.set('value', moment(unix).toISOString());
+          }.bind(this),
+          minDate: minDateValue,
+          maxDate: maxDateValue
         });
       },
 
       showDatePicker: function () {
-        if (!this.datePicker) {
-          this.initializeDatePicker();
-        }
         jQuery(this).find('.date-picker').pDatepicker('show');
       },
 
@@ -220,7 +197,6 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
           var stringDate = moment(this.value).format();
           stringDate = moment(stringDate).unix();
           var selectedDate = persianDate().unix(stringDate);
-
 
           jQuery(this).find('.date-picker').pDatepicker('setDate',
             [
@@ -239,7 +215,8 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
 
           try {
             jQuery(this).find('.date-picker').pDatepicker('destroy');
-          } catch (ex) {}
+          } catch (ex) {
+          }
           this.datePicker = null;
         }
       }
