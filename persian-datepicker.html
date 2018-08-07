@@ -93,7 +93,6 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
 
   <script>
     Polymer({
-
       is: 'persian-datepicker',
 
       properties: {
@@ -102,14 +101,17 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
           notify: true,
           observer: '_valueChange'
         },
+
         timePickerEnabled: {
           type: Boolean,
           value: false
         },
+
         dateFormat: {
           type: String,
           value: 'YYYY-MM-DD'
         },
+
         showIcon: {
           type: Boolean,
           value: false
@@ -122,16 +124,20 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
 
         label: String,
 
-        minDateEnable: {
-          type: Boolean,
-          value: false,
-          notify: true
-        },
-        maxDateEnable: {
-          type: Boolean,
-          value: false,
-          notify: true
-        }
+        /**
+         * For Enable Limiting Date From Current Date To Next
+         */
+        minDateEnable: {type: Boolean, value: false, notify: true},
+
+        /**
+         * For Enable Limiting Date From Current Date To Preview
+         */
+        maxDateEnable: {type: Boolean, value: false, notify: true},
+
+        /**
+         * For Show Default Value
+         */
+        showDefaultValue: {type: Boolean, value: false, notify: true}
       },
 
       ready: function () {
@@ -142,6 +148,7 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
         if (this.minDateEnable) {
           minDateValue = new persianDate(new Date());
         }
+
         if (this.maxDateEnable) {
           maxDateValue = new persianDate(new Date());
         }
@@ -150,33 +157,7 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
           format: me.dateFormat,
           autoClose: !me.disableAutoClose,
           persianDigit: true,
-          timePicker: {
-            enabled: me.timePickerEnabled
-          },
-          onSelect: function (unix) {
-            this.set('value', moment(unix).toISOString());
-          }.bind(this),
-          minDate: minDateValue,
-          maxDate: maxDateValue
-        });
-      },
-
-      initializeDatePicker: function () {
-        var minDateValue = 0;
-        var maxDateValue = 0;
-        var me = this;
-
-        if (this.minDateEnable) {
-          minDateValue = new persianDate(new Date());
-        }
-        if (this.maxDateEnable) {
-          maxDateValue = new persianDate(new Date());
-        }
-
-        this.datePicker = jQuery(this).find('.date-picker').pDatepicker({
-          format: me.dateFormat,
-          autoClose: !me.disableAutoClose,
-          persianDigit: true,
+          initialValue: this.showDefaultValue,
           timePicker: {
             enabled: me.timePickerEnabled
           },
@@ -193,32 +174,31 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
       },
 
       _valueChange: function () {
-        if (this.value && this.datePicker) {
-          var stringDate = moment(this.value).format();
-          stringDate = moment(stringDate).unix();
-          var selectedDate = persianDate().unix(stringDate);
+        var me = this;
+        var minDateValue = 0;
+        var maxDateValue = 0;
+        var showDate = false;
 
-          jQuery(this).find('.date-picker').pDatepicker('setDate',
-            [
-              selectedDate.pDate.year,
-              selectedDate.pDate.month,
-              selectedDate.pDate.monthDayNumber + 1,
-              selectedDate.pDate.hours,
-              selectedDate.pDate.minutes
-            ]
-          )
-        } else if (this.value) {
-          jQuery(this).find('.date-picker').val(this.value);
-          this.initializeDatePicker();
-        } else if (this.datePicker) {
-          jQuery(this).find('.date-picker').val(null);
-
-          try {
-            jQuery(this).find('.date-picker').pDatepicker('destroy');
-          } catch (ex) {
-          }
-          this.datePicker = null;
+        if (this.minDateEnable) {
+          minDateValue = new persianDate(new Date());
         }
+        if (this.maxDateEnable) {
+          maxDateValue = new persianDate(new Date());
+        }
+
+        jQuery(this).find('.date-picker').pDatepicker({
+          autoClose: true,
+          initialValue: showDate,
+          format: me.format,
+          timePicker: {
+            enabled: me.timePickerEnabled
+          },
+          onSelect: function (unix) {
+            this.set('value', moment(unix).toISOString());
+          }.bind(this),
+          minDate: minDateValue,
+          maxDate: maxDateValue
+        });
       }
 
     });
