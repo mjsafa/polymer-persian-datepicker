@@ -15,7 +15,7 @@ bower install --save polymer-persian-datepicker t
             show-icon
             value="{{myDateValue}}"
             auto-close
-            label="تاریخ"></persian-datepicker>
+            label="تاریخ" default-date-format="yyyy-dd-mm"></persian-datepicker>
 ```
 
 ## Install the Polymer-CLI
