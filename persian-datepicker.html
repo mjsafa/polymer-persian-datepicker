@@ -149,9 +149,9 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
         var me = this;
         var format = me.dateFormat;
 
-        if (this.defaultDateFormat && this.defaultDateFormat !== "") {
+       /* if (this.defaultDateFormat && this.defaultDateFormat !== "") {
           format = this.defaultDateFormat.toUpperCase();
-        }
+        }*/
 
         if (this.minDateEnable) {
           minDateValue = new persianDate(new Date());
@@ -170,7 +170,7 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
             enabled: me.timePickerEnabled
           },
           onSelect: function (unix) {
-            this.set('value', (this.defaultDateFormat && this.defaultDateFormat !== "") ? (new persianDate(unix).format(format)) : (moment(unix).toISOString()));
+            this.set('value', (this.defaultDateFormat && this.defaultDateFormat !== "") ? moment(unix).format(this.defaultDateFormat) : moment(unix).toISOString());
 //            console.log(new persianDate(unix).format("YYYY-MM"));
           }.bind(this),
           minDate: minDateValue,
@@ -189,9 +189,9 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
         var showDate = false;
         var format = me.dateFormat;
 
-        if (this.defaultDateFormat && this.defaultDateFormat !== "") {
+        /*if (this.defaultDateFormat && this.defaultDateFormat !== "") {
           format = this.defaultDateFormat.toUpperCase();
-        }
+        }*/
 
         if (this.minDateEnable) {
           minDateValue = new persianDate(new Date());
@@ -209,7 +209,7 @@ a persian datepicker polymer 1 element based on https://github.com/babakhani/pwt
             enabled: me.timePickerEnabled
           },
           onSelect: function (unix) {
-            this.set('value', (this.defaultDateFormat && this.defaultDateFormat !== "") ? (new persianDate(unix).format(format)) : (moment(unix).toISOString()));
+            this.set('value', (this.defaultDateFormat && this.defaultDateFormat !== "") ? moment(unix).format(this.defaultDateFormat) : moment(unix).toISOString());
           }.bind(this),
           minDate: minDateValue,
           maxDate: maxDateValue
